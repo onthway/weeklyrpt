@@ -1,0 +1,81 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}"
+                  name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource 资源文件名称-->
+    <resource type="i18n" name="i18n" location="weeklyrpt" />
+
+    <!-- add our web resources -->
+    <web-resource key="simplebp-resources" name="simplebp Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <dependency>com.atlassian.confluence.plugins.confluence-create-content-plugin:resources</dependency>
+
+        <transformation extension="soy">
+            <transformer key="soyTransformer">
+                <functions>com.atlassian.confluence.plugins.soy:soy-core-functions
+                </functions>
+            </transformer>
+        </transformation>
+
+        <resource type="download" name="weeklyrpt.css" location="/css/weeklyrpt.css" />
+        <resource type="download" name="weeklyrpt.js" location="/js/weeklyrpt.js" />
+        <resource type="download" name="weeklyrpt.soy.js" location="/soy/weeklyrpt.soy" />
+        <resource type="download" name="images/" location="/images" />
+
+        <context>weeklyrpt</context>
+        <context>atl.general</context>
+        <context>atl.admin</context>
+    </web-resource>
+
+    <!-- Blueprint -->
+    <blueprint key="my-blueprint" index-key="my-index" i18n-name-key="MyPlugin.Blueprints.Simple.letsGetStarted" how-to-use-template="MyPlugin.Blueprints.Simple.letsGetStarted" >
+        <!--模板选择对话框-->
+<!--
+        <content-template ref="simplebp-template" />
+        <content-template ref="simplebp-template2" />
+        <dialog-wizard key="simplebp-wizard">
+            <dialog-page id="page1Id" template-key="MyPlugin.Blueprints.Simple.page1Form"
+                         title-key="my.blueprint.wizard.page1.title"
+
+                         description-header-key="my.blueprint.wizard.page1.desc.header"
+                         description-content-key="my.blueprint.wizard.page1.desc.content"
+                         last="true"/>
+        </dialog-wizard>
+-->
+    </blueprint>
+
+    <!-- Add to the Create Menu -->
+    <web-item key="create-by-sample-template" i18n-name-key="my.create-link.title"
+              section="system.create.dialog/content">
+        <description key="my.create-link.description" />
+        <resource name="icon" type="download" location="/images/weeklyrptblueprint.png" />
+        <param name="blueprintKey" value="my-blueprint" />
+    </web-item>
+
+    <!-- Template for Blueprint -->
+    <content-template key="simplebp-template" template-title-key="my.blueprint.title" i18n-name-key="my.blueprint.title">
+        <resource name="template" type="download" location="/templates/mytemplate.xml" />
+         		<context-provider
+         			class="com.atlassian.confluence.plugins.weeklyrpt.WeeklyrptContextProvider" />
+    </content-template>
+
+    <!-- Second Template for Blueprint -->
+    <content-template key="simplebp-template2" template-title-key="my.blueprint.title2" i18n-name-key="my.blueprint.title2">
+        <resource name="template" type="download" location="/templates/mytemplate2.xml" />
+    </content-template>
+
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+
+    <!-- import from the product container -->
+    <component-import key="eventPublisher" interface="com.atlassian.event.api.EventPublisher"/>
+
+    <component key="eventListener" i18n-name-key="eventListener" class="com.atlassian.confluence.plugins.weeklyrpt.WeeklyrptBlueprintListener"/>
+
+</atlassian-plugin>
